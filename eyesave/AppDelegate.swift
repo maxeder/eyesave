@@ -12,9 +12,27 @@ import SwiftUI
 class AppDelegate: NSObject, NSApplicationDelegate {
 
     var window: NSWindow!
+    var statusBarItem: NSStatusItem!
+
 
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
+        
+        // Status Bar
+        let statusBar = NSStatusBar.system
+        
+        statusBarItem = statusBar.statusItem(
+            withLength: NSStatusItem.squareLength)
+        
+        statusBarItem.button?.title = "👀"
+        
+        let statusBarMenu = NSMenu(title: "Cap Status Bar Menu")
+        
+        statusBarItem.menu = statusBarMenu
+        
+        
+        
+        
         // Create the SwiftUI view that provides the window contents.
         let contentView = ContentView()
 
