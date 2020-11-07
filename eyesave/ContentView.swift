@@ -1,17 +1,24 @@
 //
 //  ContentView.swift
-//  eyesave
 //
-//  Created by Max Eder on 04.11.20.
+//  EyeSave
+//
+//  Created by Max Eder on 04.11.2020
 //
 
 import SwiftUI
 
 struct ContentView: View {
     var body: some View {
+        VStack {
         Text("EyeSave")
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .font(.largeTitle)
+            .padding()
+        Text("Max Eder")
+        Text("2020")
+        }.frame(width: 300, height: 200)
     }
+
 }
 
 

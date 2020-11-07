@@ -48,6 +48,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             action: #selector(togglePopover(_:)),
             keyEquivalent: "")
         
+        statusBarMenu.addItem(NSMenuItem.separator())
+        
+        statusBarMenu.addItem(
+            withTitle: "Quit EyeSave",
+            action: #selector(AppDelegate.quitApp),
+            keyEquivalent: "")
+        
         
         // Create the SwiftUI view that provides the window contents.
         let contentView = ContentView()
@@ -67,15 +74,18 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @objc func startTimer() {
         print("Starting Timer")
         
+        if timer == nil {
         timer = Timer.scheduledTimer(timeInterval: 1200, target: self, selector: #selector(sendNotification), userInfo: nil, repeats: true)
-        
-        //notification.deliveryDate = Date(timeIntervalSinceNow: 5)
-        //NSUserNotificationCenter.default.scheduleNotification(notification)
+        }
     }
 
     @objc func cancelTimer() {
         print("Canceled Timer")
-        timer.invalidate()
+       
+        if timer != nil {
+             timer!.invalidate()
+             timer = nil
+          }
     }
     
     
@@ -89,22 +99,23 @@ class AppDelegate: NSObject, NSApplicationDelegate {
          }
     }
     
-    
-    
-    
     @objc func sendNotification() {
         let notification = NSUserNotification()
             notification.title = "EyeSave"
             notification.subtitle = "Take a break!"
             notification.soundName = NSUserNotificationDefaultSoundName
             NSUserNotificationCenter.default.deliver(notification)
-        
     }
     
+    @objc func quitApp() {
+        cancelTimer()
+        NSApplication.shared.terminate(self)
+    }
     
 
     func applicationWillTerminate(_ aNotification: Notification) {
         // Insert code here to tear down your application
+        cancelTimer()
     }
 
 
