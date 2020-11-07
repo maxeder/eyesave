@@ -1,8 +1,14 @@
 {
   "images" : [
     {
-      "filename" : "menubaricon22px.png",
-      "idiom" : "mac"
+      "filename" : "16.png",
+      "idiom" : "mac",
+      "scale" : "1x"
+    },
+    {
+      "filename" : "32.png",
+      "idiom" : "mac",
+      "scale" : "2x"
     }
   ],
   "info" : {
