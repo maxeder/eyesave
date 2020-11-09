@@ -15,6 +15,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var statusBarItem: NSStatusItem!
     var timer: Timer!
     var popover: NSPopover!
+    var timerActive: Bool!
 
 
 
@@ -75,7 +76,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         print("Starting Timer")
         
         if timer == nil {
-        timer = Timer.scheduledTimer(timeInterval: 1200, target: self, selector: #selector(sendNotification), userInfo: nil, repeats: true)
+        timer = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(sendNotification), userInfo: nil, repeats: true)
+            
+            // change menu text on timer start
+            statusBarItem.menu?.item(at: 0)?.title = "Timer running..."
+            
         }
     }
 
@@ -85,6 +90,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         if timer != nil {
              timer!.invalidate()
              timer = nil
+            
+            // change menu text on timer end
+            statusBarItem.menu?.item(at: 0)?.title = "Start Timer"
+            
+            timerActive = false
           }
     }
     
@@ -118,6 +128,41 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         cancelTimer()
     }
 
+    
+    
+    
+    @objc func onWakeNote(note: NSNotification) {
+        
+        if timerActive == true {
+            timer = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(sendNotification), userInfo: nil, repeats: true)
+        }
+        print("wake")
+    }
+
+    @objc func onSleepNote(note: NSNotification) {
+        if timer != nil {
+            timer!.invalidate()
+            timer = nil
+            timerActive = true
+            
+          }
+       print("sleep")
+    }
+
+    func fileNotifications() {
+        NSWorkspace.shared.notificationCenter.addObserver(
+            self, selector: #selector(onWakeNote(note:)),
+            name: NSWorkspace.didWakeNotification, object: nil)
+
+        NSWorkspace.shared.notificationCenter.addObserver(
+            self, selector: #selector(onSleepNote(note:)),
+            name: NSWorkspace.willSleepNotification, object: nil)
+    }
+    
+    
+    
+    
+    
 
 }
 
