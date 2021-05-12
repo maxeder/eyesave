@@ -15,10 +15,18 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var statusBarItem: NSStatusItem!
     var timer: Timer!
     var popover: NSPopover!
+    var timerStarted = false
 
 
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
+        
+        // observer
+        NSWorkspace.shared.notificationCenter.addObserver(self, selector: #selector(sleepListener(_:)),
+                                                            name: NSWorkspace.willSleepNotification, object: nil)
+          NSWorkspace.shared.notificationCenter.addObserver(self, selector: #selector(sleepListener(_:)),
+                                                            name: NSWorkspace.didWakeNotification, object: nil)
+        
         
         // Status Bar
         let statusBar = NSStatusBar.system
@@ -74,13 +82,17 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @objc func startTimer() {
         print("Starting Timer")
         
+        timerStarted = true
+        
         if timer == nil {
-        timer = Timer.scheduledTimer(timeInterval: 1200, target: self, selector: #selector(sendNotification), userInfo: nil, repeats: true)
+        timer = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(sendNotification), userInfo: nil, repeats: true)
         }
     }
 
     @objc func cancelTimer() {
         print("Canceled Timer")
+        
+        timerStarted = false
        
         if timer != nil {
              timer!.invalidate()
@@ -103,10 +115,17 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         print("Send Notification")
         let notification = NSUserNotification()
             notification.title = "EyeSave"
-            notification.subtitle = "Take a break!"
+            notification.subtitle = generateMsg()
             notification.soundName = NSUserNotificationDefaultSoundName
             NSUserNotificationCenter.default.deliver(notification)
     }
+    
+    @objc func generateMsg() -> String {
+        let randomInt = Int.random(in: 0..<6)
+        print(randomInt)
+        return "Hello World"
+    }
+    
     
     @objc func quitApp() {
         cancelTimer()
@@ -117,6 +136,26 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationWillTerminate(_ aNotification: Notification) {
         // Insert code here to tear down your application
         cancelTimer()
+    }
+    
+    @objc private func sleepListener(_ aNotification: Notification) {
+        print("listening to sleep")
+
+
+        if aNotification.name == NSWorkspace.willSleepNotification {
+            print("Going to sleep")
+            if(timerStarted) {
+                if timer != nil {
+                     timer!.invalidate()
+                     timer = nil
+                }
+            }
+        } else if aNotification.name == NSWorkspace.didWakeNotification {
+            print("Woke up")
+            if(timerStarted) {
+                startTimer()
+            }
+        }
     }
 
 
