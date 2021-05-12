@@ -15,7 +15,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var statusBarItem: NSStatusItem!
     var timer: Timer!
     var popover: NSPopover!
+    
     var timerStarted = false
+    var notificationInterval = 5.0
+    
+    var notificationTexts = [
+        "Take a break!",
+        "Save your eyes!",
+        "Stare outside!",
+        "Look away!"
+    ]
 
 
 
@@ -85,7 +94,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         timerStarted = true
         
         if timer == nil {
-        timer = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(sendNotification), userInfo: nil, repeats: true)
+        timer = Timer.scheduledTimer(timeInterval: notificationInterval, target: self, selector: #selector(sendNotification), userInfo: nil, repeats: true)
         }
     }
 
@@ -121,9 +130,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     @objc func generateMsg() -> String {
-        let randomInt = Int.random(in: 0..<6)
+        let randomInt = Int.random(in: 0..<3)
         print(randomInt)
-        return "Hello World"
+        return notificationTexts[randomInt]
     }
     
     
