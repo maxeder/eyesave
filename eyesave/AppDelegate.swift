@@ -100,6 +100,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     @objc func sendNotification() {
+        print("Send Notification")
         let notification = NSUserNotification()
             notification.title = "EyeSave"
             notification.subtitle = "Take a break!"
