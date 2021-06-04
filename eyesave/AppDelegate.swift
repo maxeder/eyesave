@@ -17,7 +17,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var popover: NSPopover!
     
     var timerStarted = false
-    var notificationInterval = 5.0
+    var notificationInterval = 1200.0
     
     var notificationTexts = [
         "Take a break!",
